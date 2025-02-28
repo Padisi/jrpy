@@ -54,6 +54,15 @@ class player(particle):
         self.trail.pop(0)
         self.trail.append(tuple(self.pos.copy()))
 
+    def move_CM(self, swarm, dt):
+        self.vel  = self.mu*self.forces
+        swarm.pos = swarm.pos - self.vel*dt
+        self.trail.pop(0)
+        trail_array = np.array(self.trail)
+        trail_array = trail_array - self.vel*dt
+        self.trail = list(trail_array)
+        self.trail.append(self.pos)
+
 
 class swarm(particle):
     def __init__(self, *args, **kargs):

@@ -13,15 +13,16 @@ X,Y = np.meshgrid(x,y)
 X = X.flatten()
 Y = Y.flatten()
 pos = np.zeros([Nx*Ny,2])
+a = 15
 pos[:,0] = X*1280
 pos[:,1] = Y*720
-Particles = jrpy.swarm(pos,5,mu=5,a=100,rgb=(255,255,255))
+Particles = jrpy.swarm(pos,a/2,mu=5,a=a,rgb=(255,255,255))
 #for i in range(Nx*Ny):
 #    pos = np.array([X[i],Y[i]])*np.array([1280,720])
 #    r = 5
 #    Particles.append(jrpy.particle(pos, r, trail_len=2, a=1 ,mu=0.005,rgb=(255,255,255)))
 # Initialize Pygame
-player = jrpy.player(np.array([640,360]), radius=5, rgb=(255,0,0), mu=5, trail_len=15)
+player = jrpy.player(np.array([640,360]), radius=a/2, rgb=(255,0,0), mu=5, trail_len=15)
 
 pygame.init()
 
@@ -79,12 +80,12 @@ while running:
 #        particle.move(player,dt)
 #        particle.draw(screen)
     Particles.move(player,dt)
+    player.move_CM(Particles,dt)
     Particles.draw(screen)
     #if step<steps:
         #player.forces = np.array([fx[step],fy[step]])
     #if step==steps:
         #player.forces = np.array([0.0,0.0])
-    player.move(dt)
     if player.pos[0]<0+player.r:
         player.forces[0] = 0
     if player.pos[1]<0+player.r:
@@ -95,8 +96,8 @@ while running:
         player.forces[1] = 0
     player.draw(screen)
     # Display time
-    time_text = font.render(f'Time: {step * dt:.5f} s', True, (255, 255, 255))
-    screen.blit(time_text, (10, 10))
+    #time_text = font.render(f'Time: {step * dt:.5f} s', True, (255, 255, 255))
+    #screen.blit(time_text, (10, 10))
 
     # Update the display
     pygame.display.flip()
